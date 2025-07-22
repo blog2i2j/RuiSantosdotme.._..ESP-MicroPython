@@ -1,4 +1,4 @@
-# Complete project details at https://RandomNerdTutorials.com/micropython-programming-with-esp32-and-esp8266/
+# Complete project details: https://RandomNerdTutorials.com/micropython-send-emails-esp32-esp826/
 # uMail (MicroMail) for MicroPython
 # Copyright (c) 2018 Shawwwn <shawwwn1@gmai.com> https://github.com/shawwwn/uMail/blob/master/umail.py
 # License: MIT
@@ -26,14 +26,14 @@ class SMTP:
         return int(code), resp
 
     def __init__(self, host, port, ssl=False, username=None, password=None):
-        import ussl
+        import ssl
         self.username = username
         addr = usocket.getaddrinfo(host, port)[0][-1]
         sock = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
         sock.settimeout(DEFAULT_TIMEOUT)
         sock.connect(addr)
         if ssl:
-            sock = ussl.wrap_socket(sock)
+            sock = ssl.wrap_socket(sock)
         code = int(sock.read(3))
         sock.readline()
         assert code==220, 'cant connect to server %d, %s' % (code, resp)
@@ -44,7 +44,7 @@ class SMTP:
         if not ssl and CMD_STARTTLS in resp:
             code, resp = self.cmd(CMD_STARTTLS)
             assert code==220, 'start tls failed %d, %s' % (code, resp)
-            self._sock = ussl.wrap_socket(sock)
+            self._sock = ssl.wrap_socket(sock)
 
         if username and password:
             self.login(username, password)
